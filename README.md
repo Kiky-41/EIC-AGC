@@ -36,3 +36,11 @@ Python. Python notebooks: `numpy`, `pandas`, `scipy`, `matplotlib` (as imported)
 ```bibtex
 @article{Rahmat_2024, title={Equal Incremental Cost Method with Adjustable Gamma Control to Solve Generator Scheduling}, volume={16}, ISSN={2085-3688}, url={http://dx.doi.org/10.20895/infotel.v16i3.1170}, DOI={10.20895/infotel.v16i3.1170}, number={3}, journal={JURNAL INFOTEL}, publisher={LPPM Institut Teknologi Telkom Purwokerto}, author={Rahmat, Basuki and Wijaya, I Gede Putu Oka Indra and Ikhsan, Rifki Rahman Nur and Yustika, Lindiasari Martha and Raharjo, Jangkung}, year={2024}, month=Aug }
 ```
+
+## License
+
+[![CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](LICENSE)
+
+Licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). **Attribution is required**: any use of this code, results, or figures, including in publications, must cite:
+
+> Basuki Rahmat; I Gede Putu Oka Indra Wijaya; Rifki Rahman Nur Ikhsan; Lindiasari Martha Yustika; Jangkung Raharjo (2024). Equal Incremental Cost Method with Adjustable Gamma Control to Solve Generator Scheduling. *JURNAL INFOTEL*. https://doi.org/10.20895/infotel.v16i3.1170
