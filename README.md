@@ -101,12 +101,27 @@ Input data is **not included**. Place files in `data/` (notebooks) or next to th
 
 ## Results
 
-| Metric | Value |
-|---|---|
-| Test case | 15 units, 2,650 MW demand |
-| Best fuel cost | USD 32,289.03 |
-| Control step | 10% (also tested at 50% and 90%) |
-| Power balance | exact, residual below $10^{-5}$ MW |
+### 15-unit system, 2,650 MW, gamma sweep
+
+| Gamma | Demand (MW) | Cost (USD/h) | Time (s) | Behaviour |
+|---|---|---|---|---|
+| 10% | 2,650 | 32,289.03 | 195 | finest step, best cost, slowest |
+| 50% | 2,650 | 32,808.77 | 30.6 | coarser step, faster, cost rises |
+| 90% | 2,650 | 33,126.20 | 25.5 | coarsest step, fastest, cost highest |
+
+### Same 2,650 MW case against published dispatch methods
+
+| Method | Power (MW) | Cost (USD/h) | Time (s) |
+|---|---|---|---|
+| EIC-AGC | 2,650 | 32,289.03 | 195 |
+| VLIM | 2,650 | 32,183.00 | 0.004 |
+| ELIM | 2,650 | 32,542.00 | 0.12 |
+| LIM | 2,650 | 32,549.00 | 2.6 |
+| TVACPSO | 2,650 | 32,462.00 | 0.67 |
+| MPSO | 2,650 | 32,465.00 | 1.87 |
+| PSO | 2,650 | 32,476.00 | 0.76 |
+| Dynamic programming | 2,650 | 32,506.00 | not reported |
+| GSCNHGWO | 2,650 | 32,687.00 | 14.9 |
 
 
 ## Requirements
