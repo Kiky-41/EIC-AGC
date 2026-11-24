@@ -15,7 +15,7 @@ Generator scheduling remains an intriguing issue within the energy industry. It 
 
 ## Proposed method
 
-EIC-AGC keeps the equal-incremental-cost (EIC) optimality condition of the classical lambda iteration and replaces the analytic lambda update with an explicit control step $\gamma$. The method starts from a common $\lambda$, advances it by $\gamma$ until total generation reaches the demand, then projects the schedule onto the ramp limits. A final repair loop removes the small residual mismatch in 0.01 MW increments. The paper tests $\gamma=10\%$, $50\%$ and $90\%$; the reported run uses $10\%$ and reaches the 2,650 MW demand exactly at USD 32,289.03.
+EIC-AGC keeps the equal-incremental-cost (EIC) optimality condition of the classical lambda iteration and replaces the analytic lambda update with an explicit control step $\gamma$. The method starts from a common $\lambda$, advances it by $\gamma$ until total generation reaches the demand, then projects the schedule onto the ramp limits. A final repair loop removes the small residual mismatch in 0.01 MW increments. The paper tests $\gamma=10\text{ percent}$, $50\text{ percent}$ and $90\text{ percent}$; the reported run uses $10\text{ percent}$ and reaches the 2,650 MW demand exactly at USD 32,289.03.
 
 ### Problem formulation
 
@@ -52,7 +52,7 @@ $$\lambda_i(P_i)=\frac{dF_i}{dP_i}=b_i+2c_iP_i.$$
 
 Setting $\lambda_i=\lambda$ and solving for $P_i$ yields the dispatch implied by a trial $\lambda$, with the result clipped to the unit limits:
 
-$$P_i(\lambda)=\operatorname{clip}\!\left(\frac{\lambda-b_i}{2c_i},\;P_i^{\min},\;P_i^{\max}\right).$$
+$$P_i(\lambda)=\operatorname{clip}\left(\frac{\lambda-b_i}{2c_i},\quadP_i^{\min},\quadP_i^{\max}\right).$$
 
 Instead of solving the balance equation analytically, EIC-AGC walks $\lambda$ upward in fixed steps:
 
@@ -60,11 +60,11 @@ $$\lambda^{(k+1)}=\lambda^{(k)}+\gamma.$$
 
 A larger $\gamma$ reaches the demand in fewer iterations but can overshoot; a smaller $\gamma$ is more accurate but slower. After each step the schedule is made ramp-feasible against the previous period:
 
-$$P_i\leftarrow\min\!\left(P_i^{t-1}+R_i^{U},\;\max\!\left(P_i^{t-1}-R_i^{D},\;P_i\right)\right).$$
+$$P_i\leftarrow\min\left(P_i^{t-1}+R_i^{U},\quad\max\left(P_i^{t-1}-R_i^{D},\quadP_i\right)\right).$$
 
 If the clipped and ramp-limited schedule does not balance exactly, the residual is removed unit by unit. Writing $\Delta P_i=P_i-P_{i-1}$ for the step between neighbouring units, the unit with the largest positive step is reduced by 0.01 MW when generation is excessive, and the unit with the most negative step is raised when generation is short:
 
-$$P_{i}\leftarrow P_{i}\pm0.01\ \text{MW},\qquad i=\arg\max_i\Delta P_i\ \text{or}\ \arg\min_i\Delta P_i.$$
+$$P_{i}\leftarrow P_{i}\pm0.01~\text{MW},\qquad i=\arg\max_i\Delta P_i~\text{or}~\arg\min_i\Delta P_i.$$
 
 The loop stops when $\left|P_D-\sum_iP_i\right|\le10^{-5}$ MW.
 
