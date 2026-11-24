@@ -32,18 +32,13 @@ The first constraint fixes the total output; the second keeps every unit inside 
 
 ### Notation
 
-| Symbol | Meaning | Unit |
-|---|---|---|
-| $N$ | number of generating units | – |
-| $P_i$ | output of unit $i$ | MW |
-| $P_i^{\min},P_i^{\max}$ | lower and upper generation limits | MW |
-| $a_i,b_i,c_i$ | fuel-cost coefficients (constant, linear, quadratic) | USD/h, USD/MWh, USD/MW²h |
-| $P_D$ | system demand | MW |
-| $R_i^{U},R_i^{D}$ | ramp-up and ramp-down limits | MW per period |
-| $F$ | total fuel cost | USD/h |
-| $\lambda$ | common incremental cost (Lagrange multiplier) | USD/MWh |
-| $\gamma$ | lambda control step | same unit as $\lambda$ |
-| $t$ | scheduling period index | – |
+| Symbol | Meaning | Symbol | Meaning |
+|---|---|---|---|
+| $N$ | number of generating units | $R_i^{U},R_i^{D}$ | ramp-up and ramp-down limits (MW per period) |
+| $P_i$ | output of unit $i$ (MW) | $F$ | total fuel cost (USD/h) |
+| $P_i^{\min},P_i^{\max}$ | lower and upper generation limits (MW) | $\lambda$ | common incremental cost (Lagrange multiplier) (USD/MWh) |
+| $a_i,b_i,c_i$ | fuel-cost coefficients (constant, linear, quadratic) (USD/h, USD/MWh, USD/MW²h) | $\gamma$ | lambda control step (same unit as $\lambda$) |
+| $P_D$ | system demand (MW) | $t$ | scheduling period index |
 
 ### Update equations
 
