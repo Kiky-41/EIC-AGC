@@ -99,6 +99,16 @@ Input data is **not included**. Place files in `data/` (notebooks) or next to th
 | `input6.xlsx` | Sheet1: `Unit`, `a`, `b`, `c`, `pmin`, `pmax`, `rampup`, `rampdown`, `poz` |
 
 
+## Results
+
+| Metric | Value |
+|---|---|
+| Test case | 15 units, 2,650 MW demand |
+| Best fuel cost | USD 32,289.03 |
+| Control step | 10% (also tested at 50% and 90%) |
+| Power balance | exact, residual below $10^{-5}$ MW |
+
+
 ## Requirements
 
 Python. Python notebooks: `numpy`, `pandas`, `scipy`, `matplotlib` (as imported). MATLAB scripts: R2021a+.
