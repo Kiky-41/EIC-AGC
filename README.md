@@ -15,45 +15,70 @@ Generator scheduling remains an intriguing issue within the energy industry. It 
 
 ## Proposed method
 
-EIC-AGC keeps the equal-incremental-cost (EIC) optimality condition and replaces the analytic lambda update with an explicit control step $\gamma$. Starting from $\lambda=0$, $\lambda$ is advanced by $\gamma$ until total generation matches demand; ramp limits are then applied and the small residual mismatch is repaired in 0.01 MW steps.
+EIC-AGC keeps the equal-incremental-cost (EIC) optimality condition of the classical lambda iteration and replaces the analytic lambda update with an explicit control step $\gamma$. The method starts from a common $\lambda$, advances it by $\gamma$ until total generation reaches the demand, then projects the schedule onto the ramp limits. A final repair loop removes the small residual mismatch in 0.01 MW increments. The paper tests $\gamma=10\%$, $50\%$ and $90\%$; the reported run uses $10\%$ and reaches the 2,650 MW demand exactly at USD 32,289.03.
 
 ### Problem formulation
 
-$$\min F=\sum_{i=1}^{N}\left(a_i+b_iP_i+c_iP_i^2\right)$$
+The dispatch minimises total fuel cost,
 
-subject to
+$$\min F=\sum_{i=1}^{N}\left(a_i+b_iP_i+c_iP_i^2\right),$$
 
-$$\sum_{i=1}^{N}P_i=P_D,\qquad P_i^{\min}\le P_i\le P_i^{\max},\qquad -R_i^{D}\le P_i^{t}-P_i^{t-1}\le R_i^{U}$$
+where each unit contributes a quadratic cost curve. The schedule must satisfy the power balance and the unit and ramp limits:
+
+$$\sum_{i=1}^{N}P_i=P_D,\qquad P_i^{\min}\le P_i\le P_i^{\max},\qquad -R_i^{D}\le P_i^{t}-P_i^{t-1}\le R_i^{U}.$$
+
+The first constraint fixes the total output; the second keeps every unit inside its nameplate range; the third limits how far a unit may move between two consecutive scheduling periods.
+
+### Notation
+
+| Symbol | Meaning | Unit |
+|---|---|---|
+| $N$ | number of generating units | – |
+| $P_i$ | output of unit $i$ | MW |
+| $P_i^{\min},P_i^{\max}$ | lower and upper generation limits | MW |
+| $a_i,b_i,c_i$ | fuel-cost coefficients (constant, linear, quadratic) | USD/h, USD/MWh, USD/MW²h |
+| $P_D$ | system demand | MW |
+| $R_i^{U},R_i^{D}$ | ramp-up and ramp-down limits | MW per period |
+| $F$ | total fuel cost | USD/h |
+| $\lambda$ | common incremental cost (Lagrange multiplier) | USD/MWh |
+| $\gamma$ | lambda control step | same unit as $\lambda$ |
+| $t$ | scheduling period index | – |
 
 ### Update equations
 
-Marginal cost of unit $i$:
+Economic dispatch is optimal when the marginal costs of all unconstrained units are equal. Differentiating the cost curve gives the marginal cost of unit $i$:
 
-$$\lambda_i(P_i)=\frac{dF_i}{dP_i}=b_i+2c_iP_i$$
+$$\lambda_i(P_i)=\frac{dF_i}{dP_i}=b_i+2c_iP_i.$$
 
-At the optimum every unconstrained unit shares one $\lambda$, hence
+Setting $\lambda_i=\lambda$ and solving for $P_i$ yields the dispatch implied by a trial $\lambda$, with the result clipped to the unit limits:
 
-$$P_i(\lambda)=\operatorname{clip}\!\left(\frac{\lambda-b_i}{2c_i},\;P_i^{\min},\;P_i^{\max}\right)$$
+$$P_i(\lambda)=\operatorname{clip}\!\left(\frac{\lambda-b_i}{2c_i},\;P_i^{\min},\;P_i^{\max}\right).$$
 
-$$\lambda^{(k+1)}=\lambda^{(k)}+\gamma$$
+Instead of solving the balance equation analytically, EIC-AGC walks $\lambda$ upward in fixed steps:
 
-The reported run uses $\gamma=0.1$ (10%); the paper also tests 50% and 90%. Ramp-feasible projection against the previous schedule:
+$$\lambda^{(k+1)}=\lambda^{(k)}+\gamma.$$
 
-$$P_i\leftarrow\min\!\left(P_i^{t-1}+R_i^{U},\;\max\!\left(P_i^{t-1}-R_i^{D},\;P_i\right)\right)$$
+A larger $\gamma$ reaches the demand in fewer iterations but can overshoot; a smaller $\gamma$ is more accurate but slower. After each step the schedule is made ramp-feasible against the previous period:
 
-Residual balance repair, repeated until $\left|P_D-\sum_iP_i\right|\le10^{-5}$ MW:
+$$P_i\leftarrow\min\!\left(P_i^{t-1}+R_i^{U},\;\max\!\left(P_i^{t-1}-R_i^{D},\;P_i\right)\right).$$
 
-$$\Delta P_i=P_i-P_{i-1},\qquad P_{i}\leftarrow P_{i}\pm0.01\ \text{MW}\ \text{on the unit with the largest/smallest }\Delta P_i$$
+If the clipped and ramp-limited schedule does not balance exactly, the residual is removed unit by unit. Writing $\Delta P_i=P_i-P_{i-1}$ for the step between neighbouring units, the unit with the largest positive step is reduced by 0.01 MW when generation is excessive, and the unit with the most negative step is raised when generation is short:
+
+$$P_{i}\leftarrow P_{i}\pm0.01\ \text{MW},\qquad i=\arg\max_i\Delta P_i\ \text{or}\ \arg\min_i\Delta P_i.$$
+
+The loop stops when $\left|P_D-\sum_iP_i\right|\le10^{-5}$ MW.
 
 ### Algorithm
 
-1. Set $\lambda=0$, $P_i=P_i^{\min}$.
-2. Increment $\lambda$ by $\gamma$; compute $P_i(\lambda)$ and clip to limits.
+1. Set $\lambda=0$ and $P_i=P_i^{\min}$.
+2. Increment $\lambda$ by $\gamma$; compute $P_i(\lambda)$ and clip to the generation limits.
 3. Apply the ramp projection unit by unit.
-4. If $\sum_iP_i>P_D$, reduce the unit with the largest positive step by 0.01 MW; if $\sum_iP_i<P_D$, raise the unit with the smallest (most negative) step. Repeat until balanced.
+4. Repair the residual balance in 0.01 MW steps until $\left|P_D-\sum_iP_i\right|\le10^{-5}$ MW.
 5. Evaluate $F=\sum_i(a_i+b_iP_i+c_iP_i^2)$ and report the schedule.
 
-The 15-unit, 2,650 MW case converges exactly with $\gamma=0.1$ at USD 32,289.03.
+### Implementation note
+
+In the paper the ramp constraint couples consecutive hours. In the notebook the same clamp is applied sequentially between neighbouring units inside one hour, so the code is a unit-order heuristic rather than a strict inter-hour ramp check. The README formulation follows the paper.
 
 ## Contents
 
