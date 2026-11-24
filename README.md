@@ -109,6 +109,8 @@ Input data is **not included**. Place files in `data/` (notebooks) or next to th
 | 50% | 2,650 | 32,808.77 | 30.6 | coarser step, faster, cost rises |
 | 90% | 2,650 | 33,126.20 | 25.5 | coarsest step, fastest, cost highest |
 
+Cost and time trade off against the control step. A 10% step reaches 32,289.03 USD/h in 195 s, 50% costs 1.61% more and runs 6.4 times faster, 90% costs 2.59% more and runs 7.6 times faster. The extra fuel at large steps is the price of overshooting lambda and repairing the schedule afterwards.
+
 ### Same 2,650 MW case against published dispatch methods
 
 | Method | Power (MW) | Cost (USD/h) | Time (s) |
@@ -122,6 +124,8 @@ Input data is **not included**. Place files in `data/` (notebooks) or next to th
 | PSO | 2,650 | 32,476.00 | 0.76 |
 | Dynamic programming | 2,650 | 32,506.00 | not reported |
 | GSCNHGWO | 2,650 | 32,687.00 | 14.9 |
+
+EIC-AGC is second only to VLIM (32,183.00 USD/h) and beats every published metaheuristic in the table, including TVACPSO at 32,462.00 USD/h. Run time is the weak side: 195 s is the slowest entry, about 40,000 times the 0.004 s of VLIM.
 
 
 ## Requirements
