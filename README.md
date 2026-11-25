@@ -108,11 +108,17 @@ Cost and time trade off against the control step. A 10% step reaches 32,289.03 U
 
 ### Same 2,650 MW case against published dispatch methods
 
-| Method | EIC-AGC | VLIM | ELIM | LIM | TVACPSO | MPSO | PSO | Dynamic programming | GSCNHGWO |
-|---|---|---|---|---|---|---|---|---|---|
-| Power (MW) | 2,650 | 2,650 | 2,650 | 2,650 | 2,650 | 2,650 | 2,650 | 2,650 | 2,650 |
-| Cost (USD/h) | 32,289.03 | 32,183.00 | 32,542.00 | 32,549.00 | 32,462.00 | 32,465.00 | 32,476.00 | 32,506.00 | 32,687.00 |
-| Time (s) | 195 | 0.004 | 0.12 | 2.6 | 0.67 | 1.87 | 0.76 | not reported | 14.9 |
+| Method | Power (MW) | Cost (USD/h) | Time (s) |
+|---|---|---|---|
+| EIC-AGC | 2,650 | 32,289.03 | 195 |
+| VLIM | 2,650 | 32,183.00 | 0.004 |
+| ELIM | 2,650 | 32,542.00 | 0.12 |
+| LIM | 2,650 | 32,549.00 | 2.6 |
+| TVACPSO | 2,650 | 32,462.00 | 0.67 |
+| MPSO | 2,650 | 32,465.00 | 1.87 |
+| PSO | 2,650 | 32,476.00 | 0.76 |
+| Dynamic programming | 2,650 | 32,506.00 | not reported |
+| GSCNHGWO | 2,650 | 32,687.00 | 14.9 |
 
 EIC-AGC is second only to VLIM (32,183.00 USD/h) and beats every published metaheuristic in the table, including TVACPSO at 32,462.00 USD/h. Run time is the weak side: 195 s is the slowest entry, about 40,000 times the 0.004 s of VLIM.
 
